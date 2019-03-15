@@ -1,12 +1,12 @@
 FROM golang:alpine AS builder
 
-WORKDIR /go/src/app
+WORKDIR $GOPATH/src/multi-stage/app
 COPY main.go .
 RUN go get -d -v
-RUN go build -o webserver .
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o /go/bin/app
 
-FROM alpine
-WORKDIR /app
-COPY --from=builder /go/src/app/ /app/
 
-CMD ["./webserver"]
+FROM scratch
+COPY --from=builder /go/bin/app /go/bin/app
+
+CMD ["/go/bin/app"]
