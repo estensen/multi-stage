@@ -2,11 +2,13 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
+
+	log "github.com/sirupsen/logrus"
 )
 
 func helloHandler(w http.ResponseWriter, r *http.Request) {
+	log.Infof("uri: %s", r.RequestURI)
 	fmt.Fprint(w, "Hello Go")
 }
 
